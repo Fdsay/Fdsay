@@ -12,15 +12,17 @@ cursor = conn.cursor()
 # 定义创建数据表的SQL语句
 create_table_query = """
 CREATE TABLE IF NOT EXISTS cardimage (
-    id INT PRIMARY KEY,
-    path VARCHAR(255),
-    file_name VARCHAR(255)
+    file_name VARCHAR(255) PRIMARY KEY,
+    id INT ,
+    path VARCHAR(255)
+    
 )
 """
+
 # 创建数据表
 cursor.execute(create_table_query)
 # 定义插入数据的SQL语句
-insert_query = "INSERT INTO cardimage (id, path, file_name) VALUES (%s, %s, %s)"
+insert_query = "INSERT INTO cardimage ( file_name,id, path) VALUES (%s, %s, %s)"
 
 # 文件夹路径
 folder_path = r"D:\GitHub\Fdsay\XUANXUAN\CreditCard-OCR-master\picture"
@@ -33,7 +35,7 @@ for index, image_file in enumerate(image_files, start=1):
     # 处理文件名编码问题
     image_name = image_file.encode('latin1').decode('gbk')
     image_path = os.path.join(folder_path, image_file).encode('latin1').decode('gbk')
-    cursor.execute(insert_query, (index, image_path, image_name))
+    cursor.execute(insert_query, ( image_name,index, image_path))
 
 
 # 提交事务并关闭连接
