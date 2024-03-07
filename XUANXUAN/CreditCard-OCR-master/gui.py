@@ -314,7 +314,7 @@ class OCR_Window(QMainWindow):
             cursor = conn.cursor()
 
             # 创建数据表
-            cursor.execute("CREATE TABLE IF NOT EXISTS results (file_name VARCHAR(255), card_number VARCHAR(255), expiration_date VARCHAR(255), issuing_bank VARCHAR(255), card_type VARCHAR(255), is_unionpay VARCHAR(255))")
+            cursor.execute("CREATE TABLE IF NOT EXISTS results (file_name VARCHAR(255) KEY, card_number VARCHAR(255), expiration_date VARCHAR(255), issuing_bank VARCHAR(255), card_type VARCHAR(255), is_unionpay VARCHAR(255))")
 
             # 插入数据
             for result in self.saves:

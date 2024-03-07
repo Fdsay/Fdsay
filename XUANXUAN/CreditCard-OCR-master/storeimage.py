@@ -14,16 +14,16 @@ create_table_query = """
 CREATE TABLE IF NOT EXISTS cardimage (
     id INT PRIMARY KEY,
     path VARCHAR(255),
-    name VARCHAR(255)
+    file_name VARCHAR(255)
 )
 """
 # 创建数据表
 cursor.execute(create_table_query)
 # 定义插入数据的SQL语句
-insert_query = "INSERT INTO cardimage (id, path, name) VALUES (%s, %s, %s)"
+insert_query = "INSERT INTO cardimage (id, path, file_name) VALUES (%s, %s, %s)"
 
 # 文件夹路径
-folder_path = r"D:\code\CreditCard-OCR-master\picture"
+folder_path = r"D:\GitHub\Fdsay\XUANXUAN\CreditCard-OCR-master\picture"
 
 # 获取文件夹中的所有图片文件
 image_files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f)) and f.endswith(('.jpg', '.jpeg', '.png', '.gif'))]
