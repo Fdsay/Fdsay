@@ -39,7 +39,7 @@ namespace UID
         private void AddUserToExcel(string username, string password)
         {
 
-            using (var excelPackage = new ExcelPackage(new System.IO.FileInfo("D:\\code\\C++\\UID\\users.xlsx")))
+            using (var excelPackage = new ExcelPackage(new System.IO.FileInfo("D:\\GitHub\\Fdsay\\XUANXUAN\\UID\\users.xlsx")))
             {
                 var worksheet = excelPackage.Workbook.Worksheets[0];
                 int rowCount = worksheet.Dimension.Rows;

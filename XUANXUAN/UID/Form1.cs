@@ -47,7 +47,7 @@ namespace UID
         {
              
             // 读取Excel文件
-            using (var excelPackage = new ExcelPackage(new System.IO.FileInfo("D:\\code\\C++\\UID\\users.xlsx")))
+            using (var excelPackage = new ExcelPackage(new System.IO.FileInfo("D:\\GitHub\\Fdsay\\XUANXUAN\\UID\\users.xlsx")))
             {
                 var worksheet = excelPackage.Workbook.Worksheets[0]; // 假设用户名和密码在第一个工作表中
 
