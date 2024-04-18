@@ -136,6 +136,7 @@
             this.button1.TabIndex = 12;
             this.button1.Text = "添加";
             this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // dataGridView1
             // 
@@ -165,7 +166,7 @@
             this.Controls.Add(this.label1);
             this.DoubleBuffered = true;
             this.Name = "StudentInfoForm";
-            this.Size = new System.Drawing.Size(1001, 668);
+            this.Size = new System.Drawing.Size(1373, 668);
             this.Load += new System.EventHandler(this.StudentInfoForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
