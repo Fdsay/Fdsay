@@ -26,13 +26,17 @@ namespace EXPPP2
             // 获取文本框中的内容
             string name = textBox1.Text;
             string number = textBox2.Text;
-            string classroom = textBox3.Text;
-            string tele = textBox4.Text;
+            string sex = textBox3.Text;
+            string nation = textBox4.Text;
+            string age = textBox6.Text;
+            string time = textBox7.Text;
+            string classroom = textBox8.Text;
+            string tele = textBox9.Text;
             // 将用户添加到Excel中
-            AddUserToExcel(name, number, classroom, tele);
+            AddUserToExcel(name, number,sex,nation,age,time, classroom, tele);
 
             // 提示用户已添加
-            MessageBox.Show("User added to Excel successfully!");
+            MessageBox.Show("添加成功!");
             // 刷新DataGridView显示最新数据
             RefreshDataGridView();
         }
@@ -42,7 +46,7 @@ namespace EXPPP2
             // 保存DataGridView中的修改到Excel
             UpdateExcelFromDataGridView();
             // 提示用户已更新
-            MessageBox.Show("Excel updated successfully!");
+            MessageBox.Show("保存成功！");
             RefreshDataGridView();
             PerformFuzzySearch(textBox5.Text);
         }
@@ -51,7 +55,7 @@ namespace EXPPP2
             // 进行模糊查询
             PerformFuzzySearch(textBox5.Text);
         }
-        private void AddUserToExcel(string name, string number, string classroom, string tele)
+        private void AddUserToExcel(string name, string number,string sex,string nation,string age,string time, string classroom, string tele)
         {
             using (var excelPackage = new ExcelPackage(new FileInfo("D:\\GitHub\\Fdsay\\XUANXUAN\\EXPPP2\\EXPPP2\\students.xlsx")))
             {
@@ -61,8 +65,12 @@ namespace EXPPP2
                 // 在下一个空行中添加用户
                 worksheet.Cells[rowCount + 1, 1].Value = name;
                 worksheet.Cells[rowCount + 1, 2].Value = number;
-                worksheet.Cells[rowCount + 1, 3].Value = classroom;
-                worksheet.Cells[rowCount + 1, 4].Value = tele;
+                worksheet.Cells[rowCount + 1, 3].Value = sex;
+                worksheet.Cells[rowCount + 1, 4].Value = nation;
+                worksheet.Cells[rowCount + 1, 5].Value = age;
+                worksheet.Cells[rowCount + 1, 6].Value = time;
+                worksheet.Cells[rowCount + 1, 7].Value = classroom;
+                worksheet.Cells[rowCount + 1, 8].Value = tele;
                 excelPackage.Save();
             }
         }

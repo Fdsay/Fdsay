@@ -154,6 +154,7 @@
     <EmbeddedResource Include="TimerForm.resx">
       <DependentUpon>TimerForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="course.xlsx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
