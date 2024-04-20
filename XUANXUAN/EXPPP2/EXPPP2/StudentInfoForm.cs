@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Media;
 
 namespace EXPPP2
 {
@@ -72,7 +73,7 @@ namespace EXPPP2
             {
                 var worksheet = excelPackage.Workbook.Worksheets[0];
                 int rowCount = worksheet.Dimension.Rows;
-                int columnCount = 4; // 只显示前四列
+                int columnCount = 8; // 只显示前八列
 
                 // 创建一个DataTable来存储Excel中的数据
                 dt = new DataTable();
@@ -96,6 +97,13 @@ namespace EXPPP2
                     dt.Rows.Add(dr);
                 }
 
+                // 移除已存在的删除按钮列
+                var existingDeleteButtonColumn = dataGridView1.Columns["DeleteButtonColumn"];
+                if (existingDeleteButtonColumn != null)
+                {
+                    dataGridView1.Columns.Remove(existingDeleteButtonColumn);
+                }
+
                 // 将DataTable绑定到DataGridView中
                 dataGridView1.DataSource = dt;
 
@@ -107,8 +115,28 @@ namespace EXPPP2
                 // 设置行头列的宽度
                 dataGridView1.RowHeadersWidth = 70; // 设置为适当的值，例如50像素
 
+                // 添加删除按钮列
+                DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn();
+                deleteButtonColumn.HeaderText = "操作";
+                deleteButtonColumn.Text = "删除";
+                deleteButtonColumn.UseColumnTextForButtonValue = true;
+                deleteButtonColumn.Name = "DeleteButtonColumn";
+                
+                
+                                              // 使用单元格样式来调整按钮的大小
+                deleteButtonColumn.DefaultCellStyle.Padding = new Padding(0); // 设置按钮的内边距为10像素
+                dataGridView1.Columns.Add(deleteButtonColumn);
+
+                // 手动添加行号到行头
+                for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                {
+                    dataGridView1.Rows[i].HeaderCell.Value = (i + 1).ToString();
+                }
             }
         }
+
+
+
 
         private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
@@ -181,7 +209,7 @@ namespace EXPPP2
                 RefreshDataGridView();
                 return;
             }
-
+            RefreshDataGridView();
             // 根据关键字进行模糊查询
             var query = dt.AsEnumerable().Where(row => row.ItemArray.Any(field => field.ToString().Contains(keyword)));
 
@@ -199,9 +227,50 @@ namespace EXPPP2
             dt = filteredTable;
         }
 
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // 判断点击的是否是删除按钮列
+            if (e.ColumnIndex == dataGridView1.Columns["DeleteButtonColumn"].Index && e.RowIndex >= 0)
+            {
+                // 获取要删除的行
+                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
 
+                // 获取对应行的数据
+                DataRowView drv = (DataRowView)row.DataBoundItem;
+                DataRow dr = drv.Row;
 
+                // 获取要删除的行的姓名和学号
+                string name = dr[0].ToString();
+                string number = dr[1].ToString();
 
+                // 从 DataTable 中删除对应行的数据
+                dt.Rows.Remove(dr);
+
+                // 从 Excel 中删除对应行
+                DeleteRowFromExcel(name, number);
+
+                // 刷新 DataGridView
+                RefreshDataGridView();
+            }
+        }
+
+        private void DeleteRowFromExcel(string name, string number)
+        {
+            using (var excelPackage = new ExcelPackage(new FileInfo("D:\\GitHub\\Fdsay\\XUANXUAN\\EXPPP2\\EXPPP2\\students.xlsx")))
+            {
+                var worksheet = excelPackage.Workbook.Worksheets[0];
+
+                // 寻找要删除的行
+                int rowIndex = FindRowIndexByNameAndNumber(worksheet, name, number);
+
+                // 如果找到对应的行，则删除该行
+                if (rowIndex != -1)
+                {
+                    worksheet.DeleteRow(rowIndex + 1, 1); // Excel 行索引从 1 开始，但我们的 FindRowIndexByNameAndNumber 返回的是从 0 开始的索引
+                    excelPackage.Save();
+                }
+            }
+        }
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
@@ -247,11 +316,7 @@ namespace EXPPP2
 
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
+        
 
     }
 }
