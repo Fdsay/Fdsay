@@ -100,9 +100,89 @@ namespace EXPPP2
         }
         private void button1_Click(object sender, EventArgs e)
         {
+            UpdateExcelFromDataGridView();
+        }
+        private int MapDataGridViewColumnIndexToExcel(int dataGridViewColumnIndex)
+        {
+            // 映射规则
+            // DataGridView 的第1、2、3、4、5、6、7、8列 对应 Excel 的第1、2、9、10、11、12、13、14列
+            switch (dataGridViewColumnIndex)
+            {
+                case 0:
+                case 1:
+                    return dataGridViewColumnIndex + 1; // 第1和第2列直接映射到Excel的第1和第2列
+                default:
+                    return dataGridViewColumnIndex + 7; // 其他列需要加上偏移量6
+            }
+        }
 
+        private void UpdateExcelFromDataGridView()
+        {
+            try
+            {
+                using (var excelPackage = new ExcelPackage(new FileInfo("D:\\GitHub\\Fdsay\\XUANXUAN\\EXPPP2\\EXPPP2\\students.xlsx")))
+                {
+                    var worksheet = excelPackage.Workbook.Worksheets[0];
+
+                    // 遍历 DataGridView 中的数据
+                    foreach (DataGridViewRow dataGridViewRow in dataGridView1.Rows)
+                    {
+                        // 获取第一列和第二列的值
+                        string name = dataGridViewRow.Cells[0].Value?.ToString();
+                        string number = dataGridViewRow.Cells[1].Value?.ToString();
+
+                        // 在 Excel 中查找对应的行
+                        int rowIndex = FindRowIndexByNameAndNumber(worksheet, name, number);
+
+                        if (rowIndex != -1)
+                        {
+                            // 如果找到对应的行，则更新该行的信息
+                            for (int j = 0; j < dataGridViewRow.Cells.Count - 2; j++)
+                            {
+                                int excelColumnIndex = MapDataGridViewColumnIndexToExcel(j + 2);
+                                worksheet.Cells[rowIndex + 1, excelColumnIndex].Value = dataGridViewRow.Cells[j + 2].Value?.ToString();
+                            }
+                        }
+                        else
+                        {
+                            // 如果没有找到对应的行，则在 Excel 中新增一行并填入相应的信息
+                            int rowCount = worksheet.Dimension.Rows;
+                            worksheet.Cells[rowCount + 1, 1].Value = name;
+                            worksheet.Cells[rowCount + 1, 2].Value = number;
+                            for (int j = 0; j < dataGridViewRow.Cells.Count - 2; j++)
+                            {
+                                int excelColumnIndex = MapDataGridViewColumnIndexToExcel(j + 2);
+                                worksheet.Cells[rowCount + 1, excelColumnIndex].Value = dataGridViewRow.Cells[j + 2].Value?.ToString();
+                            }
+                        }
+                    }
+                    excelPackage.Save();
+                    MessageBox.Show("数据已成功保存到Excel文件。");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("错误: " + ex.Message);
+            }
         }
 
 
+        private int FindRowIndexByNameAndNumber(ExcelWorksheet worksheet, string name, string number)
+        {
+            // 遍历 Excel 中的数据，查找匹配的行
+            for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+            {
+                if (worksheet.Cells[row, 1].Value?.ToString() == name && worksheet.Cells[row, 2].Value?.ToString() == number)
+                {
+                    return row - 1; // 返回行索引（从0开始）
+                }
+            }
+            return -1; // 如果未找到匹配的行，则返回-1
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+        }
     }
 }
