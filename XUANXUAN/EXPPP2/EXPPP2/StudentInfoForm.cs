@@ -127,16 +127,9 @@ namespace EXPPP2
                 deleteButtonColumn.DefaultCellStyle.Padding = new Padding(0); // 设置按钮的内边距为10像素
                 dataGridView1.Columns.Add(deleteButtonColumn);
 
-                // 手动添加行号到行头
-                for (int i = 0; i < dataGridView1.Rows.Count; i++)
-                {
-                    dataGridView1.Rows[i].HeaderCell.Value = (i + 1).ToString();
-                }
+                
             }
         }
-
-
-
 
         private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
